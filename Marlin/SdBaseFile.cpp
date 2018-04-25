@@ -1012,7 +1012,7 @@ void SdBaseFile::printFatTime( uint16_t fatTime) {
  * the value zero, false, is returned for failure.
  */
 bool SdBaseFile::printName() {
-  char name[13];
+  char name[FILENAME_LENGTH];
   if (!getFilename(name)) return false;
   MYSERIAL.print(name);
   return true;
@@ -1152,7 +1152,7 @@ int8_t SdBaseFile::readDir(dir_t* dir, char* longFilename) {
   int16_t n;
   // if not a directory file or miss-positioned return an error
   if (!isDir() || (0X1F & curPosition_)) return -1;
-  
+
   //If we have a longFilename buffer, mark it as invalid. If we find a long filename it will be filled automaticly.
   if (longFilename != NULL)
   {
@@ -1166,8 +1166,8 @@ int8_t SdBaseFile::readDir(dir_t* dir, char* longFilename) {
     if (dir->name[0] == DIR_NAME_FREE) return 0;
     // skip empty entries and entry for .  and ..
     if (dir->name[0] == DIR_NAME_DELETED || dir->name[0] == '.') continue;
-    //Fill the long filename if we have a long filename entry,
-	// long filename entries are stored before the actual filename.
+    // Fill the long filename if we have a long filename entry.
+    // Long filename entries are stored before the short filename.
 	if (DIR_IS_LONG_NAME(dir) && longFilename != NULL)
     {
     	vfat_t *VFAT = (vfat_t*)dir;
@@ -1175,7 +1175,7 @@ int8_t SdBaseFile::readDir(dir_t* dir, char* longFilename) {
     	if (VFAT->firstClusterLow == 0 && (VFAT->sequenceNumber & 0x1F) > 0 && (VFAT->sequenceNumber & 0x1F) <= MAX_VFAT_ENTRIES)
     	{
 			//TODO: Store the filename checksum to verify if a none-long filename aware system modified the file table.
-    		n = ((VFAT->sequenceNumber & 0x1F) - 1) * 13;
+    		n = ((VFAT->sequenceNumber & 0x1F) - 1) * FILENAME_LENGTH;
 			longFilename[n+0] = utf16Ascii(VFAT->name1[0]);
 			longFilename[n+1] = utf16Ascii(VFAT->name1[1]);
 			longFilename[n+2] = utf16Ascii(VFAT->name1[2]);
@@ -1191,7 +1191,7 @@ int8_t SdBaseFile::readDir(dir_t* dir, char* longFilename) {
 			longFilename[n+12] = utf16Ascii(VFAT->name3[1]);
 			//If this VFAT entry is the last one, add a NUL terminator at the end of the string
 			if (VFAT->sequenceNumber & 0x40)
-				longFilename[n+13] = '\0';
+				longFilename[n + FILENAME_LENGTH] = '\0';
 		}
     }
     // return if normal file or subdirectory
