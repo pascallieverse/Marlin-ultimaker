@@ -5,7 +5,7 @@
 # based on: http://hydraraptor.blogspot.com/2007/10/measuring-temperature-easy-way.html
 """Thermistor Value Lookup Table Generator
 
-Generates lookup to temperature values for use in a microcontroller in C format based on: 
+Generates lookup to temperature values for use in a microcontroller in C format based on:
 http://hydraraptor.blogspot.com/2007/10/measuring-temperature-easy-way.html
 
 The main use is for Arduino programs that read data from the circuit board described here:

@@ -99,25 +99,25 @@ volatile signed char count_direction[NUM_AXIS] = { 1, 1, 1, 1};
 // r26 to store 0
 // r27 to store the byte 1 of the 24 bit result
 #define MultiU16X8toH16(intRes, charIn1, intIn2) \
-asm volatile ( \
-"clr r26 \n\t" \
-"mul %A1, %B2 \n\t" \
-"movw %A0, r0 \n\t" \
-"mul %A1, %A2 \n\t" \
-"add %A0, r1 \n\t" \
-"adc %B0, r26 \n\t" \
-"lsr r0 \n\t" \
-"adc %A0, r26 \n\t" \
-"adc %B0, r26 \n\t" \
-"clr r1 \n\t" \
-: \
-"=&r" (intRes) \
-: \
-"d" (charIn1), \
-"d" (intIn2) \
-: \
-"r26" \
-)
+    asm volatile ( \
+    "clr r26 \n\t" \
+    "mul %A1, %B2 \n\t" \
+    "movw %A0, r0 \n\t" \
+    "mul %A1, %A2 \n\t" \
+    "add %A0, r1 \n\t" \
+    "adc %B0, r26 \n\t" \
+    "lsr r0 \n\t" \
+    "adc %A0, r26 \n\t" \
+    "adc %B0, r26 \n\t" \
+    "clr r1 \n\t" \
+    : \
+    "=&r" (intRes) \
+    : \
+    "d" (charIn1), \
+    "d" (intIn2) \
+    : \
+    "r26" \
+    )
 
 // intRes = longIn1 * longIn2 >> 24
 // uses:
@@ -486,7 +486,7 @@ ISR(TIMER1_COMPA_vect)
 
     if ((out_bits & (1<<Z_AXIS)) != 0) {   // -direction
       WRITE(Z_DIR_PIN,INVERT_Z_DIR);
-      
+
       #ifdef Z_DUAL_STEPPER_DRIVERS
         WRITE(Z2_DIR_PIN,INVERT_Z_DIR);
       #endif

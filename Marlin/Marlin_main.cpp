@@ -2000,7 +2000,7 @@ void process_commands()
 
         target_direction = isHeatingBed(); // true if heating, false if cooling
 
-        while ( target_direction ? (isHeatingBed()) : (isCoolingBed()&&(CooldownNoWait==false)) )
+        while (target_direction ? (isHeatingBed()) : (isCoolingBed()&&(CooldownNoWait==false)))
         {
           if(( millis() - codenum) > 1000 ) //Print Temp Reading every 1 second while heating up.
           {
@@ -2029,7 +2029,7 @@ void process_commands()
            fanSpeed=constrain(code_value(),0,255);
         }
         else {
-          fanSpeed=255;
+          fanSpeed = 255;
         }
         break;
       case 107: //M107 Fan Off
@@ -2181,7 +2181,7 @@ void process_commands()
     case 117: // M117 display message
       starpos = (strchr(strchr_pointer + 5,'*'));
       if(starpos!=NULL)
-        *(starpos-1)='\0';
+        *starpos='\0';
       lcd_setstatus(strchr_pointer + 5);
       break;
     case 114: // M114
@@ -2301,7 +2301,7 @@ void process_commands()
         if(code_seen(axis_codes[i])) max_feedrate[i] = code_value();
       }
       break;
-    case 204: // M204 acclereration S normal moves T filmanent only moves
+    case 204: // M204 acceleration: S - normal moves; T - filament only moves
       {
         if(code_seen('S')) acceleration = code_value() ;
         if(code_seen('T')) retract_acceleration = code_value() ;
@@ -2317,7 +2317,7 @@ void process_commands()
       if(code_seen('E')) max_e_jerk = code_value() ;
     }
     break;
-    case 206: // M206 additional homeing offset
+    case 206: // M206 additional homing offset
       for(int8_t i=0; i < 3; i++)
       {
         if(code_seen(axis_codes[i])) add_homeing[i] = code_value();
